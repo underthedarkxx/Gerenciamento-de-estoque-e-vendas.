@@ -1,0 +1,14 @@
+package com.sdias.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.sdias.model.Produto;
+
+@Repository
+public interface ProdutoRepository extends JpaRepository<Produto, Long>{
+    boolean existsBySku(String sku);
+    List<Produto> findByQuantidadeLessThanEqual(Integer quantidade);
+}

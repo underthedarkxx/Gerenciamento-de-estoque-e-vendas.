@@ -1,0 +1,283 @@
+# =================================================================
+# SUÍTE DE TESTES COMPLETA PARA API DE ESTOQUE
+# =================================================================
+# Variável para a URL base da API
+@baseUrl = http://localhost:8080/api
+
+# =================================================================
+# 0. AUTENTICAÇÃO
+# =================================================================
+
+### Efetuar Login para obter o token
+# @name loginRequest
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "login": "sdias",
+  "senha": "senhaSuperSecreta123"
+}
+
+# Captura o token da resposta de login para usar nas requisições seguintes
+@token = {{loginRequest.response.body.token}}
+
+### Para separar as requisições, usamos '###'
+### =======================================================
+
+# =================================================================
+# 1. SETUP: CRIAÇÃO DE DADOS (COM AUTENTICAÇÃO)
+# =================================================================
+
+### Criar Tipo de Produto
+POST {{baseUrl}}/tipos-produto
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nome": "Aromatizador Teste"
+}
+
+### Criar Essência
+POST {{baseUrl}}/essencias
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nome": "Lavanda Teste",
+  "descricaoOlfativa": "Essência de Lavanda para testes"
+}
+
+### Criar Embalagem
+POST {{baseUrl}}/embalagens
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nome": "Vidro Spray Teste 150ml",
+  "custo": 5.50,
+  "tipoProdutoId": 1
+}
+
+### Criar Produto Principal
+POST {{baseUrl}}/produtos
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "sku": "TESTE-LAV-150",
+  "nome": "Teste Lavanda",
+  "precoVenda": 59.90,
+  "quantidade": 100,
+  "essenciaId": 1,
+  "embalagemId": 1
+}
+
+### Criar Produto Para Deletar
+POST {{baseUrl}}/produtos
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "sku": "PROD-A-DELETAR",
+  "nome": "produto a Deletar",
+  "precoVenda": 10.00,
+  "quantidade": 10,
+  "essenciaId": 1,
+  "embalagemId": 1
+}
+
+### Criar Cliente
+POST {{baseUrl}}/clientes
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nome": "Cliente Teste Final",
+  "telefone": "27999998888"
+}
+
+# =================================================================
+# 2. TESTES DE CLIENTES
+# =================================================================
+
+### Listar todos os clientes
+GET {{baseUrl}}/clientes
+Authorization: Bearer {{token}}
+
+### Buscar cliente por ID (substitua 1 pelo ID retornado na criação)
+GET {{baseUrl}}/clientes/1
+Authorization: Bearer {{token}}
+
+### Buscar cliente por nome
+GET {{baseUrl}}/clientes/buscar?nome=Cliente Teste Final
+Authorization: Bearer {{token}}
+
+### Atualizar cliente
+PUT {{baseUrl}}/clientes/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nome": "Cliente Teste Atualizado",
+  "telefone": "27988887777"
+}
+
+### Verificar atualização
+GET {{baseUrl}}/clientes/1
+Authorization: Bearer {{token}}
+
+# =================================================================
+# 3. TESTES DE FORNECEDORES
+# =================================================================
+
+### Criar um novo fornecedor
+# @name criarFornecedor
+POST {{baseUrl}}/fornecedores
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nomeFantasia": "Fornecedor de Essências ABC",
+  "cnpj": "12.345.678/0001-99",
+  "contato": "contato@essenciasabc.com"
+}
+
+### Listar todos os fornecedores
+GET {{baseUrl}}/fornecedores
+Authorization: Bearer {{token}}
+
+### Buscar fornecedor por ID (usando o ID da resposta da criação)
+@fornecedorId = {{criarFornecedor.response.body.id}}
+GET {{baseUrl}}/fornecedores/{{fornecedorId}}
+Authorization: Bearer {{token}}
+
+### Atualizar fornecedor
+PUT {{baseUrl}}/fornecedores/{{fornecedorId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "nomeFantasia": "Fornecedor de Essências ABC (Atualizado)",
+  "contato": "novo.contato@essenciasabc.com"
+}
+
+# =================================================================
+# 4. TESTES DE COMPRAS E ESTOQUE (NOVA SECÇÃO)
+# =================================================================
+
+### Criar uma nova compra (entrada de estoque)
+POST {{baseUrl}}/compras
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "fornecedorId": 1,
+  "itens": [
+    {
+      "produtoId": 1,
+      "quantidade": 50,
+      "custoUnitario": 25.00
+    }
+  ]
+}
+
+### Listar todas as compras
+GET {{baseUrl}}/compras
+Authorization: Bearer {{token}}
+
+### Listar movimentações de estoque (para verificar a entrada)
+GET {{baseUrl}}/movimentacoes-estoque
+Authorization: Bearer {{token}}
+
+
+# =================================================================
+# 5. TESTES DE PEDIDOS
+# =================================================================
+
+### Criar pedido para o cliente
+POST {{baseUrl}}/pedidos
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "clienteId": 1,
+  "status": "PENDENTE"
+}
+
+### Adicionar item ao pedido
+POST {{baseUrl}}/pedidos/1/itens
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "produtoId": 1,
+  "quantidade": 2
+}
+
+### Listar pedidos
+GET {{baseUrl}}/pedidos
+Authorization: Bearer {{token}}
+
+### Buscar pedido por ID (substitua 1 pelo ID retornado)
+GET {{baseUrl}}/pedidos/1
+Authorization: Bearer {{token}}
+
+### Atualizar status do pedido
+PATCH {{baseUrl}}/pedidos/1/status
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "status": "ENVIADO"
+}
+
+# =================================================================
+# 6. RELATÓRIOS
+# =================================================================
+
+### Relatório de estoque baixo
+GET {{baseUrl}}/relatorios/estoque-baixo?limite=50
+Authorization: Bearer {{token}}
+
+### Relatório de vendas por cliente
+GET {{baseUrl}}/relatorios/vendas-cliente/1
+Authorization: Bearer {{token}}
+
+# =================================================================
+# 7. TESTE DE EXCLUSÃO
+# =================================================================
+
+### Excluir produto específico
+DELETE {{baseUrl}}/produtos/2
+Authorization: Bearer {{token}}
+
+### Verificar exclusão
+GET {{baseUrl}}/produtos/2
+Authorization: Bearer {{token}}
+
+# =================================================================
+# 8. TESTES DE ERRO
+# =================================================================
+
+### Buscar cliente inexistente
+GET {{baseUrl}}/clientes/99999
+Authorization: Bearer {{token}}
+
+### Criar pedido com cliente inexistente
+POST {{baseUrl}}/pedidos
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "clienteId": 99999
+}
+
+### Adicionar item a pedido inexistente
+POST {{baseUrl}}/pedidos/99999/itens
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "produtoId": 1,
+  "quantidade": 1
+}
