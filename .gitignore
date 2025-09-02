@@ -1,0 +1,35 @@
+# ==================================
+# ARQUIVO .GITIGNORE PARA PROJETO JAVA / SPRING BOOT
+# ==================================
+
+# Arquivos de log
+*.log
+
+# Arquivos gerados pelo Build (Maven / Gradle)
+target/
+build/
+*.jar
+*.war
+*.ear
+
+# Arquivos de configuração de IDEs
+.idea/
+.vscode/
+*.iml
+*.project
+*.classpath
+.settings/
+
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos com informações sensíveis (IMPORTANTE!)
+# Adicione aqui o seu arquivo de configuração que contém senhas.
+# O caminho deve ser a partir da raiz do projeto.
+/estoque-backend/src/main/resources/application.properties
+
+# Arquivos de dependências do Maven
+.mvn/
+mvnw
+mvnw.cmd

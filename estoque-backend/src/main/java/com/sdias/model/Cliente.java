@@ -3,7 +3,6 @@ package com.sdias.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -13,12 +12,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
-
 @Entity
 @Table(name = "clientes")
 public class Cliente{
@@ -36,17 +32,6 @@ public class Cliente{
     @Column(name = "data_cadastro", updatable= false)
     private LocalDateTime dataCadastro;
 
-    // Cliente.java
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private List<Pedido> pedidos;
-
-    // Pedido.java
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cliente_id")
-    @JsonBackReference
-    private Cliente cliente;
-
 
     public Cliente(){
     }
@@ -54,6 +39,18 @@ public class Cliente{
     public Cliente(String nome, String telefone){
         this.nome = nome;
         this.telefone = telefone;
+    }
+
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Pedido> pedidos;
+
+    public List<Pedido> getPedidos() {
+        return pedidos;
+    }
+
+    public void setPedidos(List<Pedido> pedidos) {
+        this.pedidos = pedidos;
     }
 
     public Long getId() {
@@ -84,12 +81,5 @@ public class Cliente{
     @PrePersist
     protected void onCreate(){
         this.dataCadastro = LocalDateTime.now();
-    }
-    public List<Pedido> getPedidos() {
-        return pedidos;
-    }
-
-    public void setPedidos(List<Pedido> pedidos) {
-        this.pedidos = pedidos;
     }
 }

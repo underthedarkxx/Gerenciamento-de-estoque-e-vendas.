@@ -15,10 +15,14 @@
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/controller/TipoProdutoController.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/dto/AtualizarStatusPedidoDTO.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/dto/ClienteDTO.java
+/home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/dto/CompraDTO.java
+/home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/dto/CompraResponseDTO.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/dto/EmbalagemDTO.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/dto/HistoricoCompraClienteDTO.java
+/home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/dto/ItemCompraDTO.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/dto/ItemPedidoDTO.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/dto/LoginDTO.java
+/home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/dto/MovimentacaoEstoqueResponseDTO.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/dto/PedidoCreateDTO.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/dto/PedidoDTO.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/dto/ProdutoDTO.java
@@ -29,6 +33,7 @@
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/model/Embalagem.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/model/Essencia.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/model/Fornecedor.java
+/home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/model/ItemCompra.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/model/ItemPedido.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/model/MovimentacaoEstoque.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/model/Pedido.java
@@ -42,6 +47,7 @@
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/repository/EmbalagemRepository.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/repository/EssenciaRepository.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/repository/FornecedorRepository.java
+/home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/repository/ItemCompraRepository.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/repository/ItemPedidoRepository.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/repository/MovimentacaoEstoqueRepository.java
 /home/roberto-dias/Documentos/sdias/estoque-backend/src/main/java/com/sdias/repository/PedidoRepository.java

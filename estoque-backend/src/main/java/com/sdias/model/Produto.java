@@ -25,7 +25,8 @@ public class Produto {
     @Column(length = 100, nullable = false)
     private String nome; // Nome do produto
 
-    @Column(nullable = false)
+    // Mapeamento correto para a coluna 'qtd_estoque'
+    @Column(name = "qtd_estoque", nullable = false)
     private Integer quantidade = 0; // Estoque inicial do produto
 
     // Muitos Produtos podem usar a mesma Essência
@@ -109,3 +110,4 @@ public class Produto {
         this.precoVenda = precoVenda;
     }
 }
+

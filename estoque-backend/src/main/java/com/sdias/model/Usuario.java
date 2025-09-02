@@ -22,14 +22,15 @@ public class Usuario implements UserDetails {
     private Long id;
     private String login;
     private String senha;
+    private String role;
 
     // Construtores, Getters e Setters...
 
     // Métodos da interface UserDetails
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Para um sistema simples, podemos definir uma única "regra" ou "perfil"
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        // A autoridade agora será baseada no campo 'role' do objeto
+        return List.of(new SimpleGrantedAuthority(role));
     }
 
     @Override
@@ -62,4 +63,8 @@ public class Usuario implements UserDetails {
     public void setLogin(String login) { this.login = login; }
     public String getSenha() { return senha; }
     public void setSenha(String senha) { this.senha = senha; }
+    
+    // Adicione os getters e setters para 'role'
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 }

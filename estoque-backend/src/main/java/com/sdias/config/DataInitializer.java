@@ -1,6 +1,7 @@
 package com.sdias.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -15,19 +16,30 @@ public class DataInitializer implements CommandLineRunner {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder; // Injetaremos o codificador de senha
+    private PasswordEncoder passwordEncoder;
+
+    // Injeta o login do admin a partir da variável de ambiente 'ADMIN_LOGIN'
+    @Value("${admin.login:#{null}}")
+    private String adminLogin;
+
+    // Injeta a senha do admin a partir da variável de ambiente 'ADMIN_SENHA'
+    @Value("${admin.senha:#{null}}")
+    private String adminSenha;
 
     @Override
     public void run(String... args) throws Exception {
-        // Verifica se já existe um usuário com o login "sdias"
-        if (usuarioRepository.findByLogin("sdias").isEmpty()) {
-            Usuario proprietaria = new Usuario();
-            proprietaria.setLogin("sdias");
-            // NUNCA salve a senha em texto puro! Use o PasswordEncoder.
-            proprietaria.setSenha(passwordEncoder.encode("senhaSuperSecreta123")); 
-            
-            usuarioRepository.save(proprietaria);
-            System.out.println(">>> Usuário da proprietária criado com sucesso!");
+        // Apenas cria o usuário se as variáveis de ambiente foram definidas
+        if (adminLogin != null && adminSenha != null) {
+            if (usuarioRepository.findByLogin(adminLogin).isEmpty()) {
+                Usuario proprietaria = new Usuario();
+                proprietaria.setLogin(adminLogin);
+                proprietaria.setSenha(passwordEncoder.encode(adminSenha));
+                proprietaria.setRole("ROLE_ADMIN");
+                usuarioRepository.save(proprietaria);
+                System.out.println(">>> Usuário admin inicial criado com sucesso!");
+            }
+        } else {
+            System.out.println(">>> Variáveis de ambiente ADMIN_LOGIN e ADMIN_SENHA não definidas. Nenhum usuário inicial foi criado.");
         }
     }
 }

@@ -9,13 +9,14 @@
 # =================================================================
 
 ### Efetuar Login para obter o token
+### Efetuar Login para obter o token
 # @name loginRequest
 POST {{baseUrl}}/login
 Content-Type: application/json
 
 {
   "login": "sdias",
-  "senha": "senhaSuperSecreta123"
+  "senha": "Shirley12*"
 }
 
 # Captura o token da resposta de login para usar nas requisições seguintes

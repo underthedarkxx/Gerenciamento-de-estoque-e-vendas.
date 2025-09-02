@@ -1,7 +1,7 @@
 package com.sdias.service;
 
 import com.sdias.dto.CompraDTO;
-import com.sdias.dto.CompraResponseDTO; // Importe o DTO de resposta
+import com.sdias.dto.CompraResponseDTO;
 import com.sdias.dto.ItemCompraDTO;
 import com.sdias.model.*;
 import com.sdias.model.enums.TipoMovimentacao;
@@ -11,10 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors; // Import necessário para a conversão
+import java.util.stream.Collectors;
 
 @Service
 public class CompraService {
@@ -39,9 +41,8 @@ public class CompraService {
         novaCompra.setFornecedor(fornecedor);
         novaCompra.setDataCompra(LocalDateTime.now());
         
-        Compra compraSalva = compraRepository.save(novaCompra);
-
         List<ItemCompra> itensDaCompra = new ArrayList<>();
+        BigDecimal valorTotal = BigDecimal.ZERO;
         
         for (ItemCompraDTO itemDTO : dto.itens()) {
             Produto produto = produtoRepository.findById(itemDTO.produtoId())
@@ -54,32 +55,32 @@ public class CompraService {
             movimentacao.setProduto(produto);
             movimentacao.setTipoMovimentacao(TipoMovimentacao.ENTRADA);
             movimentacao.setQuantidade(itemDTO.quantidade());
-            movimentacao.setCompra(compraSalva);
+            movimentacao.setCompra(novaCompra);
             movimentacaoEstoqueRepository.save(movimentacao);
 
             ItemCompra item = new ItemCompra();
-            item.setCompra(compraSalva);
+            item.setCompra(novaCompra);
             item.setProduto(produto);
             item.setQuantidade(itemDTO.quantidade());
             item.setCustoUnitario(itemDTO.custoUnitario());
             itensDaCompra.add(item);
+            
+            valorTotal = valorTotal.add(item.getCustoUnitario().multiply(BigDecimal.valueOf(item.getQuantidade())));
         }
 
-        itemCompraRepository.saveAll(itensDaCompra);
-        compraSalva.setItens(itensDaCompra);
-
-        return compraSalva;
+        novaCompra.setItens(itensDaCompra);
+        novaCompra.setValorTotal(valorTotal);
+        
+        return compraRepository.save(novaCompra);
     }
 
-    // =======================================================
-    // MÉTODO CORRIGIDO PARA DEVOLVER O TIPO CERTO
-    // =======================================================
+    @Transactional
     public List<CompraResponseDTO> listarTodas() {
-        return compraRepository.findAll() // 1. Pega todas as entidades Compra
-                .stream()                 // 2. Transforma a lista num fluxo de dados
-                .map(CompraResponseDTO::new) // 3. Para cada Compra, cria um novo CompraResponseDTO
-                .collect(Collectors.toList()); // 4. Junta tudo numa nova lista de DTOs
+        List<Compra> compras = compraRepository.findAll();
+        // A anotação @Transactional garante que as coleções LAZY sejam carregadas
+        return compras.stream()
+                .map(CompraResponseDTO::new)
+                .collect(Collectors.toList());
     }
 }
-
 
