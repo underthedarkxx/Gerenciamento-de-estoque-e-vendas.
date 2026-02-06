@@ -8,15 +8,14 @@
 # 0. AUTENTICAÇÃO
 # =================================================================
 
-### Efetuar Login para obter o token
-### Efetuar Login para obter o token
+### Efetuar Login com os novos dados
 # @name loginRequest
 POST {{baseUrl}}/login
 Content-Type: application/json
 
 {
-  "login": "sdias",
-  "senha": "Shirley12*"
+  "login": "novo_usuario",
+  "senha": "nova_senha_123"
 }
 
 # Captura o token da resposta de login para usar nas requisições seguintes
