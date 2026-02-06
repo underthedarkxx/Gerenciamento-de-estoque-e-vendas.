@@ -101,7 +101,6 @@ Banco de dados: **`sdias`**
 - **Logística**
   - movimentacoes_estoque  
     > Responsável por registrar toda alteração de saldo
-
 ---
 
 ## ⚙️ Como Executar o Projeto
