@@ -1,9 +1,10 @@
 -- ===============================================
 -- Banco de dados limpo para a empresa SDias
 -- ===============================================
+DROP DATABASE IF EXISTS sdias;
+
 CREATE DATABASE IF NOT EXISTS sdias;
 
-DROP DATABASE IF EXISTS sdias;
 USE sdias;
 
 -- ===============================================
